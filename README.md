@@ -27,6 +27,8 @@ Main database:
 
 A SQL Schema file is provided for creating the database.
 
+Make a random secret key for the app (16 bytes is ok) and write it in `xyloid/secret_key`.
+
 Then create users like this (passwords are hashed using argon2):
 ```
 $ python3
