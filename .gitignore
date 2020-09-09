@@ -4,3 +4,4 @@ __pycache__
 std*.log
 xyloid/main.db
 *.bak
+.DS_Store

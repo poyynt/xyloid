@@ -1,4 +1,3 @@
-CREATE TABLE sqlite_sequence(name,seq);
 CREATE TABLE posts (internal_id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, name varchar (256) NOT NULL, shortlink VARCHAR (16) UNIQUE, uuid varchar (36) UNIQUE NOT NULL, created DATE NOT NULL);
 CREATE INDEX post_id_index ON posts (internal_id ASC);
 CREATE TABLE post_content (post_id INTEGER NOT NULL UNIQUE PRIMARY KEY, content TEXT NOT NULL);
