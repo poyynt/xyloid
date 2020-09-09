@@ -30,6 +30,11 @@
 			content_xhttp.open("GET", "{{ url_for('api.get_post_content', uuid='') }}" + uuid);
 			content_xhttp.send();
 		}
+		else if (this.readyState == 4) {
+			document.getElementById("error").style.display = "block";
+			document.getElementById("error").innerText = "Error " + this.status + " in loading the post. Check the URL and try again.";
+			document.getElementById("postshortlink").style.display = "none";
+		}
 	};
 	{% if uuid == None %}
 		xhttp.open("GET", "{{ url_for('api.get_post_info_by_shortlink', shortlink=shortlink) }}", true);
@@ -48,6 +53,7 @@
 document.addEventListener("load", init());
 </script>
 <main class="px-64 py-8 sm:pd-4 md:pd-4">
+	<div style="display: none;" id="error" class="message"></div>
 	<h2 id="postname" class="my-8 text-4xl"></h2>
 	<div id="postdate" class="text-gray-500"></div>
 	<div class="hr"></div>
