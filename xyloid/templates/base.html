@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>{% block title %}{% endblock %} - {{ blog }}</title>
+		<link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+		<link href="{{ url_for('static', filename='tailwind.min.css') }}" rel="stylesheet">
+		<link href="{{ url_for('static', filename='typography.min.css') }}" rel="stylesheet">
+		{% block head %}{% endblock %}
+	</head>
+	<body>
+		{% block header %}
+			{% include "header.html" %}
+		{% endblock %}
+		{% block body %}
+		{% endblock %}
+		{% block footer %}
+			{% include "footer.html" %}
+		{% endblock %}
+	</body>
+</html>

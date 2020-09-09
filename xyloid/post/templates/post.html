@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='prism.css') }}">
+<script src="{{ url_for('static', filename='prism.js') }}"></script>
+<script src="{{ url_for('static', filename='moment.min.js') }}"></script>
+<script src="{{ url_for('static', filename='moment-timezone-with-data.min.js') }}"></script>
+<script>
+	var uuid = '';
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			var j = JSON.parse(this.responseText);
+			document.getElementById("postname").innerText = j.name;
+			document.title = j.name + document.title;
+			var localDate = moment(j.created).format("[Written at] dddd, MMMM Do YYYY, H:mm");
+			document.getElementById("postdate").innerText = localDate;
+			document.getElementById("postshortlink").href = "{{ url_for('post.by_shortlink', shortlink='') }}" + j.shortlink;
+			uuid = j.uuid;
+			var content_xhttp = new XMLHttpRequest();
+			content_xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					var content_j = JSON.parse(this.responseText);
+					var md = marked(content_j.content);
+					var clean_md = DOMPurify.sanitize(md);
+					document.getElementById("postcontent").innerHTML = clean_md;
+					Prism.highlightAll();
+				}
+			};
+			content_xhttp.open("GET", "{{ url_for('api.get_post_content', uuid='') }}" + uuid);
+			content_xhttp.send();
+		}
+	};
+	{% if uuid == None %}
+		xhttp.open("GET", "{{ url_for('api.get_post_info_by_shortlink', shortlink=shortlink) }}", true);
+	{% else %}
+		xhttp.open("GET", "{{ url_for('api.get_post_info', uuid=uuid) }}", true);
+	{% endif %}
+	function init() {
+		xhttp.send()
+	}
+</script>
+<script src="{{ url_for('static', filename='marked.min.js') }}"></script>
+<script src="{{ url_for('static', filename='purify.min.js') }}"></script>
+{% endblock %}
+{% block body %}
+<script>
+document.addEventListener("load", init());
+</script>
+<main class="px-64 py-8">
+	<h2 id="postname" class="my-8 text-4xl"></h2>
+	<div id="postdate" class="text-gray-500"></div>
+	<div class="hr"></div>
+	<div id="postcontent" class="prose my-16"></div>
+	<a id="postshortlink">Link to this post</a>
+</main>
+{% endblock %}

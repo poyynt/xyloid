@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block body %}
+<main>
+	{% with messages = get_flashed_messages() %}
+		{% if messages %}
+			<section class="messages">
+				{% for message in messages %}
+					<div class="message">{{ message }}</div>
+				{% endfor %}
+			</section>
+		{% endif %}
+	{% endwith %}
+	<section class="mainsection">
+		<form method="post" action="{{ url_for('.login_verify') }}">
+			<div id="username_div">
+				<label for="username" id="username_label">Username</label>
+				<input name="username" type="text" id="username_input">
+			</div>
+			<div id="password_div">
+				<label for="password" id="password_label">Password</label>
+				<input name="password" type="password" id="password_input">
+			</div>
+			<div id="submit_div">
+				<input type="submit" id="submit_input" value="Login">
+			</div>
+		</form>
+	</section>
+</main>
+{% endblock %}
