@@ -9,6 +9,7 @@ Then install the requirements:
 Set up a webserver, and set up the database.
 The database structure must be like this:
 Main database:
+```
 |--- post_content
 |    |--- post_id			INTEGER NOT NULL UNIQUE PRIMARY KEY
 |    |--- content			TEXT NOT NULL
@@ -22,6 +23,7 @@ Main database:
 |    |--- user_id			INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL
 |    |--- username			VARCHAR(32) UNIQUE NOT NULL
 |    |--- password_hash		VARCHAR(128) NOT NULL
+```
 
 A SQL Schema file is provided for creating the database.
 
