@@ -7,14 +7,20 @@ First, clone this repository.
 Then install the requirements:
 `python3 -m pip install -r requirements.txt`
 Set up a webserver, and set up the database.
+
+
 The database structure must be like this:
+
+
 Main database:
+
+
 ```
 |--- post_content
 |    |--- post_id			INTEGER NOT NULL UNIQUE PRIMARY KEY
 |    |--- content			TEXT NOT NULL
 |--- posts
-|    |--- internal_id		INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL
+|    |--- internal_id			INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL
 |    |--- name				VARCHAR(256) NOT NULL
 |    |--- shortlink			VARCHAR(16) UNIQUE
 |    |--- uuid				VARCHAR(36) UNIQUE NOT NULL
@@ -22,7 +28,7 @@ Main database:
 |--- users
 |    |--- user_id			INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL
 |    |--- username			VARCHAR(32) UNIQUE NOT NULL
-|    |--- password_hash		VARCHAR(128) NOT NULL
+|    |--- password_hash			VARCHAR(128) NOT NULL
 ```
 
 A SQL Schema file is provided for creating the database.
