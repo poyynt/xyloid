@@ -49,4 +49,5 @@ And finally set up the blog name (shown in page titles) in `config.py` to your d
 - [ ] Make the admin panel useful (you can only post by entering the URL /admin/new into your browser's address bar after logging in).
 - [ ] Make the whole thing more pretty.
 - [ ] Add edit functionality.
+- [ ] Write template files for resetting and changing password.
 
