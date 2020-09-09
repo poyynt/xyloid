@@ -12,7 +12,7 @@
 		if (this.readyState == 4 && this.status == 200) {
 			var j = JSON.parse(this.responseText);
 			document.getElementById("postname").innerText = j.name;
-			document.title = j.name + document.title;
+			document.title = j.name + " " + document.title;
 			var localDate = moment(j.created).format("[Written at] dddd, MMMM Do YYYY, H:mm");
 			document.getElementById("postdate").innerText = localDate;
 			document.getElementById("postshortlink").href = "{{ url_for('post.by_shortlink', shortlink='') }}" + j.shortlink;
