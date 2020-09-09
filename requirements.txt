@@ -2,4 +2,5 @@ Flask
 SQLAlchemy
 Flask-SQLAlchemy
 passlib
+argon2-cffi
 
