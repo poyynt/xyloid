@@ -50,24 +50,6 @@ table {
 
 /* end of reset */
 
-form, input {
-	font-size: 2rem;
-	padding: 0.5em;
-}
-
-input {
-	display: block;
-	border: none;
-	border-bottom: 2px blue solid;
-	width: 80%;
-	padding: 0.2em;
-}
-
-label {
-	padding: 0;
-	display: block;
-}
-
 header {
 	display: block;
 	width: 100%;
