@@ -50,7 +50,4 @@ And finally set up the blog name (shown in page titles) in `config.py` to your d
 - [ ] Make the whole thing more pretty.
 - [ ] Add edit functionality.
 - [ ] Write template files for resetting and changing password.
-- [ ] Add comments.
-- [ ] Add Categories.
-
 
