@@ -1,4 +1,6 @@
 <header>
-	<div class="button p-4" onclick="window.location.href = '{{ url_for("auth.logout") }}'">Logout</div>
+	<div class="text-white button p-4 float-right" onclick="window.location.href = '{{ url_for("auth.logout") }}'">Logout</div>
+	<div class="text-white button p-4" onclick="window.location.href = '{{ url_for("admin.posts") }}'">Posts</div>
+	<div class="text-white button p-4" onclick="window.location.href = '{{ url_for("admin.new") }}'">New Post</div>
 </header>
 

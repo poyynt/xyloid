@@ -16,3 +16,11 @@ def new():
 		flash("Not logged in")
 		return redirect(url_for("auth.login_page"))
 	return render_template("new.html")
+
+@admin.route("/posts")
+def posts():
+	if not session.get("logged_in"):
+		flash("Not logged in")
+		return redirect(url_for("auth.login_page"))
+	return render_template("posts.html")
+
