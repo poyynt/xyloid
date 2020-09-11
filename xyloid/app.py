@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_minify import minify
 from werkzeug.middleware.proxy_fix import ProxyFix
 from .api.api import api
 from .auth.auth import auth
@@ -19,6 +20,9 @@ app.config["JSON_SORT_KEYS"] = False
 app.config["JSONIFY_PRETTYPRINT_REGULAR"] = True
 app.config["SECRET_KEY"] = open("xyloid/secret_key", "rb").read()
 app.wsgi_app = ProxyFix(app.wsgi_app)
+
+if config["minify"]:
+	minify(app=app, html=False, js=True, cssless=True, static=True)
 
 db.init_app(app)
 
