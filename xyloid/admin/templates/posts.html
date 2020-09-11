@@ -96,9 +96,6 @@
 		}
 	}
 	function goToPage(inPage = 1) {
-		if (page == inPage) {
-			return;
-		}
 		page = inPage;
 		clearTable();
 		fetchPage(page);
