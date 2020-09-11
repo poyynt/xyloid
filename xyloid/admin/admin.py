@@ -8,7 +8,7 @@ def index():
 	if not session.get("logged_in"):
 		flash("Not logged in")
 		return redirect(url_for("auth.login_page"))
-	return render_template("index.html")
+	return redirect(url_for(".posts"))
 
 @admin.route("/new")
 def new():
