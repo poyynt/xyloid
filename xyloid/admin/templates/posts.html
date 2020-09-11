@@ -26,13 +26,19 @@
 					uuid_a.innerText = j[i].uuid;
 					uuid.appendChild(uuid_a);
 					var created = document.createElement("td")
-					var localDate = moment(j[i].created).format("dddd, MMMM Do YYYY, H:mm");
+					var localDate = moment(j[i].created).format("DD/MM/YYYY H:mm");
 					created.innerText = localDate;
 					var actions = document.createElement("tr");
-					var action_edit = document.createElement("a")
+					var action_edit = document.createElement("a");
 					action_edit.innerText = "Edit";
 					action_edit.href = "{{ url_for('admin.edit', uuid='') }}" + j[i].uuid;
+					action_edit.classList.add("px-2");
 					actions.appendChild(action_edit);
+					var action_delete = document.createElement("a");
+					action_delete.innerText = "Delete";
+					action_delete.setAttribute("onclick", "confirmDelete('" + j[i].uuid + "')");
+					action_delete.classList.add("px-2", "cursor-pointer");
+					actions.appendChild(action_delete);
 					name.classList.add("px-4", "py-2", "border", "border-2px", "border-gray-500", "border-solid");
 					uuid.classList.add("px-4", "py-2", "border", "border-2px", "border-gray-500", "border-solid");
 					shortlink.classList.add("px-4", "py-2", "border", "border-2px", "border-gray-500", "border-solid");
@@ -53,7 +59,19 @@
 		xhttp.open("GET", "{{ url_for('api.all_posts') }}" + "/" + page, true);
 		xhttp.send();
 	}
-
+	function confirmDelete(uuid) {
+		var c = window.confirm("Are you sure you want to delete the post with uuid " + uuid + "?");
+		if (c) {
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					goToPage(page);
+				}
+			}
+			xhttp.open("GET", "{{ url_for('api.delete_post', uuid='') }}" + uuid, true);
+			xhttp.send();
+		}
+	}
 </script>
 <script>
 	var page = 0;
