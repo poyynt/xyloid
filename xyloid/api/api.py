@@ -69,3 +69,28 @@ def create_post():
 	db.session.add(post_content)
 	db.session.commit()
 	return jsonify({"uuid": uuid, "shortlink": shortlink})
+
+@api.route("/posts/delete/<uuid>")
+def delete_post(uuid):
+	if not session.get("logged_in"):
+		return jsonify({"error": "not logged in"}), 401
+	post = Posts.query.filter_by(uuid = uuid).first()
+	db.session.delete(post)
+	db.session.commit()
+	return jsonify({"status": "success", "uuid": uuid})
+
+@api.route("/posts/edit/<uuid>", methods=["POST"])
+def edit_post(uuid):
+	if not session.get("logged_in"):
+		return jsonify({"error": "not logged in"}), 401
+	post = Posts.query.filter_by(uuid = uuid).first()
+	name = request.json.get("name")
+	content = request.json.get("content")
+	if name is None or content is None:
+		return jsonify({"error": "name or content cannot be empty"}), 400
+	post.name = name
+	post.created = datetime.datetime.now(datetime.timezone.utc)
+	post_content = PostContent.query.filter_by(post_id = post.internal_id).first()
+	post_content.content = content
+	db.session.commit()
+	return jsonify({"status": "success", "uuid": uuid})

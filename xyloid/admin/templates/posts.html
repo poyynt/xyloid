@@ -28,10 +28,16 @@
 					var created = document.createElement("td")
 					var localDate = moment(j[i].created).format("dddd, MMMM Do YYYY, H:mm");
 					created.innerText = localDate;
+					var actions = document.createElement("tr");
+					var action_edit = document.createElement("a")
+					action_edit.innerText = "Edit";
+					action_edit.href = "{{ url_for('admin.edit', uuid='') }}" + j[i].uuid;
+					actions.appendChild(action_edit);
 					name.classList.add("px-4", "py-2", "border", "border-2px", "border-gray-500", "border-solid");
 					uuid.classList.add("px-4", "py-2", "border", "border-2px", "border-gray-500", "border-solid");
 					shortlink.classList.add("px-4", "py-2", "border", "border-2px", "border-gray-500", "border-solid");
 					created.classList.add("px-4", "py-2", "border", "border-2px", "border-gray-500", "border-solid");
+					actions.classList.add("px-4", "py-2", "border", "border-2px", "border-gray-500", "border-solid", "block", "text-center");
 					if (i % 2 == 1) {
 						tr.classList.add("bg-gray-200");
 					}
@@ -39,6 +45,7 @@
 					tr.appendChild(uuid);
 					tr.appendChild(shortlink);
 					tr.appendChild(created);
+					tr.appendChild(actions);
 					document.getElementById("postsbody").appendChild(tr);
 				}
 			}
@@ -168,6 +175,7 @@
 				<th class="px-4 py-2">UUID</th>
 				<th class="px-4 py-2">Shortlink</th>
 				<th class="px-4 py-2">Created</th>
+				<th class="px-4 py-2">Actions</th>
 			</tr>
 		</thead>
 		<tbody id="postsbody">

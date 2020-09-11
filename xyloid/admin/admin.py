@@ -24,3 +24,9 @@ def posts():
 		return redirect(url_for("auth.login_page"))
 	return render_template("posts.html")
 
+@admin.route("/edit/<uuid>")
+def edit(uuid):
+	if not session.get("logged_in"):
+		flash("Not logged in")
+		return redirect(url_for("auth.login_page"))
+	return render_template("edit.html", uuid = uuid)

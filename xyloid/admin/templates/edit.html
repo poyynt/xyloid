@@ -1,5 +1,5 @@
 {% extends "admin_base.html" %}
-{% block title %}New Post{% endblock %}
+{% block title %}Edit Post{% endblock %}
 {% block head %}
 <link rel="stylesheet" href="{{ url_for('static', filename='simplemde.min.css') }}">
 <script src="{{ url_for('static', filename='simplemde.min.js') }}"></script>
@@ -13,11 +13,11 @@
 	<div class="simplemde">
 		<textarea class="simplemde" id="mde"></textarea>
 	</div>
-	<div class="button" onclick="createPost()">Create</div>
+	<div class="button" onclick="editPost()">Edit</div>
 </main>
 <script>
 var simplemde = new SimpleMDE({ element: document.getElementById("mde") });
-function createPost() {
+function editPost() {
 	var name = document.getElementById("nameinput").value;
 	var content = simplemde.value();
 	var xhttp = new XMLHttpRequest();
@@ -29,9 +29,30 @@ function createPost() {
 		}
 	};
 	var data = {name: name, content: content};
-	xhttp.open("POST", "{{ url_for('api.create_post') }}", true);
+	xhttp.open("POST", "{{ url_for('api.edit_post', uuid=uuid) }}", true);
 	xhttp.setRequestHeader("Content-Type", "application/json");
 	xhttp.send(JSON.stringify(data));
 }
+</script>
+<script>
+	function fill() {
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function () {
+			if (this.readyState == 4 && this.status == 200) {
+				var j = JSON.parse(this.responseText);
+				document.getElementById("nameinput").value = j.name;
+				var content_xhttp = new XMLHttpRequest();
+				content_xhttp.onreadystatechange = function() {
+					var content_j = JSON.parse(this.responseText);
+					simplemde.value(content_j.content);
+				};
+				content_xhttp.open("GET", "{{ url_for('api.get_post_content', uuid = uuid) }}", true);
+				content_xhttp.send();
+			}
+		};
+		xhttp.open("GET", "{{ url_for('api.get_post_info', uuid = uuid) }}", true);
+		xhttp.send();
+	}
+	document.addEventListener("load", fill());
 </script>
 {% endblock %}
