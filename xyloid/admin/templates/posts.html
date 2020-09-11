@@ -46,7 +46,119 @@
 		xhttp.open("GET", "{{ url_for('api.all_posts') }}" + "/" + page, true);
 		xhttp.send();
 	}
-	document.addEventListener("load", fetchPage());
+
+</script>
+<script>
+	var page = 0;
+	var pages = 1;
+	function clearTable() {
+		document.getElementById("postsbody").innerHTML = "";
+	}
+	function setActivePage(page = 1) {
+		if (pages <= 10) {
+			document.getElementById("pagination").innerHTML = "";
+			addFirstPrev();
+			for (var i = 1; i <= pages; i++) {
+				var a = document.createElement("a");
+				a.innerText = i;
+				a.setAttribute("onclick", "goToPage(" + i + ")");
+				if (i == page) {
+					a.classList.add("active");
+				}
+				document.getElementById("pagination").appendChild(a);
+			}
+			addNextLast();
+		}
+		else {
+			var p = document.getElementById("pagination");
+			p.innerHTML = "";
+			addFirstPrev();
+			var dots = document.createElement("div");
+			dots.innerText = "...";
+			if ((page - 3) > 1) {
+				p.appendChild(dots);
+			}
+			for (var i = Math.max(page - 3, 1); i <= Math.min(page + 3, pages); i++) {
+				var a = document.createElement("a");
+				a.innerText = i;
+				a.setAttribute("onclick", "goToPage(" + i + ")");
+				if (i == page) {
+					a.classList.add("active");
+				}
+				p.appendChild(a);
+			}
+			var dots = document.createElement("div");
+			dots.innerText = "...";
+			if ((page + 3) < pages) {
+				p.appendChild(dots);
+			}
+			addNextLast();
+		}
+	}
+	function goToPage(inPage = 1) {
+		if (page == inPage) {
+			return;
+		}
+		page = inPage;
+		clearTable();
+		fetchPage(page);
+		setActivePage(page);
+	}
+	function goToPageDelta(delta = 0) {
+		console.log("delta");
+		page += delta;
+		if (page < 1)
+			page = 1;
+		if (page > pages)
+			page = pages;
+		goToPage(page);
+	}
+	function addFirstPrev() {
+		var p = document.getElementById("pagination");
+		var first = document.createElement("a");
+		first.innerText = "First";
+		first.onclick = function() {
+			goToPage(1);
+		}
+		var prev = document.createElement("a");
+		prev.innerText = "Prev";
+		prev.onclick = function() {
+			goToPageDelta(-1);
+		}
+		p.appendChild(first);
+		p.appendChild(prev);
+	}
+	function addNextLast() {
+		var p = document.getElementById("pagination");
+		var next = document.createElement("a");
+		next.innerText = "Next";
+		next.onclick = function() {
+			goToPageDelta(1);
+		}
+		var last = document.createElement("a");
+		last.innerText = "Last";
+		last.onclick = function() {
+			goToPage(pages);
+		}
+		p.appendChild(next);
+		p.appendChild(last);
+	}
+	function paginationInit() {
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				pages = Math.ceil(Number(this.responseText) / 20);
+				goToPage(1);
+				console.log("pi");
+			}
+		}
+		xhttp.open("GET", "{{ url_for('api.posts_count') }}", true);
+		xhttp.send();
+	}
+	function init() {
+		paginationInit();
+	}
+	document.addEventListener("load", init());
 </script>
 {% endblock %}
 {% block body %}
@@ -64,5 +176,9 @@
 		<tbody id="postsbody">
 		</tbody>
 	</table>
+	<div class="text-center">
+		<div class="pagination" id="pagination">
+		</div>
+	</div>
 </main>
 {% endblock %}

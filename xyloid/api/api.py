@@ -25,6 +25,10 @@ def all_posts(page = 1):
 	result = [{"name": r.name, "uuid": r.uuid, "shortlink": r.shortlink, "created": r.created} for r in result]
 	return jsonify(result)
 
+@api.route("/posts/count")
+def posts_count():
+	return str(Posts.query.count())
+
 @api.route("/posts/info/<uuid>")
 def get_post_info(uuid):
 	result = Posts.query.filter_by(uuid = uuid).first()
