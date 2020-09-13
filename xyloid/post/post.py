@@ -10,3 +10,7 @@ def by_shortlink(shortlink):
 @post.route("/uuid/<uuid>")
 def by_uuid(uuid):
 	return render_template("post.html", shortlink = None, uuid = uuid, blog=config["blog_name"])
+
+@post.route("/category/<category>")
+def category(category):
+	return render_template("category.html", category=category, blog=config["blog_name"])

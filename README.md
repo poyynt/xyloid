@@ -25,6 +25,11 @@ Main database:
 |    |--- shortlink			VARCHAR(16) UNIQUE
 |    |--- uuid				VARCHAR(36) UNIQUE NOT NULL
 |    |--- created			DATE NOT NULL
+|    |--- category1			VARCHAR(32)
+|    |--- category2			VARCHAR(32)
+|    |--- category3			VARCHAR(32)
+|    |--- category4			VARCHAR(32)
+|    |--- category5			VARCHAR(32)
 |--- users
 |    |--- user_id			INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL
 |    |--- username			VARCHAR(32) UNIQUE NOT NULL
@@ -51,6 +56,6 @@ And finally set up the blog name (shown in page titles) in `config.py` to your d
 - [x] Add edit functionality.
 - [ ] Write template files for resetting and changing password.
 - [ ] Add comments.
-- [ ] Add Categories.
+- [x] Add Categories.
 
 

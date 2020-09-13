@@ -116,3 +116,15 @@ header {
 .pagination a.active, .pagination div {
 	cursor: default;
 }
+
+#postcategories a::after, .postcategories span::after {
+	content: ", ";
+}
+
+#postcategories a:last-child::after, .postcategories span:last-child::after {
+	content: "";
+}
+
+.postcard {
+	width: 24em;
+}

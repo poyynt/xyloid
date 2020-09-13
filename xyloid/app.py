@@ -22,7 +22,7 @@ app.config["SECRET_KEY"] = open("xyloid/secret_key", "rb").read()
 app.wsgi_app = ProxyFix(app.wsgi_app)
 
 if config["minify"]:
-	minify(app=app, html=False, js=True, cssless=True, static=True)
+	minify(app=app, html=False, js=False, cssless=True, static=True)
 
 db.init_app(app)
 

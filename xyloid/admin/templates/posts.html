@@ -28,7 +28,7 @@
 					var created = document.createElement("td")
 					var localDate = moment(j[i].created).format("DD/MM/YYYY H:mm");
 					created.innerText = localDate;
-					var actions = document.createElement("tr");
+					var actions = document.createElement("td");
 					var action_edit = document.createElement("a");
 					action_edit.innerText = "Edit";
 					action_edit.href = "{{ url_for('admin.edit', uuid='') }}" + j[i].uuid;
@@ -39,11 +39,16 @@
 					action_delete.setAttribute("onclick", "confirmDelete('" + j[i].uuid + "')");
 					action_delete.classList.add("px-2", "cursor-pointer");
 					actions.appendChild(action_delete);
+					var categories = document.createElement("td");
+					categories.innerText = j[i].categories.filter(Boolean).join(", ");
+					if (categories.innerText == "")
+						categories.innerText = "uncategorized";
 					name.classList.add("px-4", "py-2", "border", "border-2px", "border-gray-500", "border-solid");
 					uuid.classList.add("px-4", "py-2", "border", "border-2px", "border-gray-500", "border-solid");
 					shortlink.classList.add("px-4", "py-2", "border", "border-2px", "border-gray-500", "border-solid");
 					created.classList.add("px-4", "py-2", "border", "border-2px", "border-gray-500", "border-solid");
-					actions.classList.add("px-4", "py-2", "border", "border-2px", "border-gray-500", "border-solid", "block", "text-center");
+					categories.classList.add("px-4", "py-2", "border", "border-2px", "border-gray-500", "border-solid");
+					actions.classList.add("px-4", "py-2", "border", "border-2px", "border-gray-500", "border-solid", "text-center");
 					if (i % 2 == 1) {
 						tr.classList.add("bg-gray-200");
 					}
@@ -52,6 +57,7 @@
 					tr.appendChild(uuid);
 					tr.appendChild(shortlink);
 					tr.appendChild(created);
+					tr.appendChild(categories);
 					tr.appendChild(actions);
 					document.getElementById("postsbody").appendChild(tr);
 				}
@@ -194,6 +200,7 @@
 				<th class="px-4 py-2">UUID</th>
 				<th class="px-4 py-2">Shortlink</th>
 				<th class="px-4 py-2">Created</th>
+				<th class="px-4 py-2">Categories</th>
 				<th class="px-4 py-2">Actions</th>
 			</tr>
 		</thead>

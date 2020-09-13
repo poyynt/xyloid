@@ -16,6 +16,19 @@
 			var localDate = moment(j.created).format("[Written at] dddd, MMMM Do YYYY, H:mm");
 			document.getElementById("postdate").innerText = localDate;
 			document.getElementById("postshortlink").href = "{{ url_for('post.by_shortlink', shortlink='') }}" + j.shortlink;
+			var categories = j.categories.filter(Boolean);
+			if (categories.length == 0) {
+				categories.push("uncategorized");
+			}
+			var c = document.createElement("span");
+			for (var i = 0; i < categories.length; i++) {
+				var a = document.createElement("a");
+				a.innerText = categories[i];
+				a.href = "{{ url_for('post.category', category='') }}" + categories[i];
+				a.classList.add("hover:text-gray-500");
+				c.appendChild(a);
+			}
+			document.getElementById("postcategories").appendChild(c);
 			uuid = j.uuid;
 			var content_xhttp = new XMLHttpRequest();
 			content_xhttp.onreadystatechange = function() {
@@ -58,6 +71,9 @@ document.addEventListener("load", init());
 	<div id="postdate" class="text-gray-500"></div>
 	<div class="hr"></div>
 	<div id="postcontent" class="prose my-16 text-justify" style="max-width: 100%;"></div>
+	<div id="postcategories" class="my-4 text-gray-700">
+		<span class="text-gray-900">Categories: </span>
+	</div>
 	<a id="postshortlink">Link to this post</a>
 </main>
 {% endblock %}

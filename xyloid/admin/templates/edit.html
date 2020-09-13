@@ -13,6 +13,11 @@
 	<div class="simplemde">
 		<textarea class="simplemde" id="mde"></textarea>
 	</div>
+	<div class="categories">
+		{% for i in range(1, 6) %}
+		<input name="category{{ i }}", type="text", id="category{{ i }}" class="form-input border border-4px border-gray-500" placeholder="Category {{ i }}">
+		{% endfor %}
+	</div>
 	<div class="button button py-2 px-4 text-center rounded block hover:bg-gray-700 hover:text-white border border-solid border-4px border-gray-500 my-2 mr-auto ml-auto" onclick="editPost()" style="width: 10ch;">Edit</div>
 </main>
 <script>
@@ -20,6 +25,9 @@ var simplemde = new SimpleMDE({ element: document.getElementById("mde") });
 function editPost() {
 	var name = document.getElementById("nameinput").value;
 	var content = simplemde.value();
+	{% for i in range(1, 6) %}
+		var category{{ i }} = document.getElementById("category{{ i }}").value;
+	{% endfor %}
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
@@ -28,7 +36,7 @@ function editPost() {
 			window.location.href = "{{ url_for('post.by_uuid', uuid='') }}" + uuid;
 		}
 	};
-	var data = {name: name, content: content};
+	var data = {name: name, content: content, category1: category1, category2: category2, category3: category3, category4: category4, category5: category5};
 	xhttp.open("POST", "{{ url_for('api.edit_post', uuid=uuid) }}", true);
 	xhttp.setRequestHeader("Content-Type", "application/json");
 	xhttp.send(JSON.stringify(data));
@@ -41,10 +49,15 @@ function editPost() {
 			if (this.readyState == 4 && this.status == 200) {
 				var j = JSON.parse(this.responseText);
 				document.getElementById("nameinput").value = j.name;
+				{% for i in range(1, 6) %}
+					document.getElementById("category{{ i }}").value = j.categories[{{ i - 1 }}];
+				{% endfor %}
 				var content_xhttp = new XMLHttpRequest();
 				content_xhttp.onreadystatechange = function() {
-					var content_j = JSON.parse(this.responseText);
-					simplemde.value(content_j.content);
+					if (this.readyState == 4 && this.status == 200) {
+						var content_j = JSON.parse(this.responseText);
+						simplemde.value(content_j.content);
+					}
 				};
 				content_xhttp.open("GET", "{{ url_for('api.get_post_content', uuid = uuid) }}", true);
 				content_xhttp.send();

@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+{% block title %}Posts with category {{ category }}{% endblock %}
+{% block head %}
+<script src="{{ url_for('static', filename='moment.min.js') }}"></script>
+<script src="{{ url_for('static', filename='moment-timezone-with-data.min.js') }}"></script>
+<script src="{{ url_for('static', filename='marked.min.js') }}"></script>
+<script src="{{ url_for('static', filename='purify.min.js') }}"></script>
+<script>
+	function fetchPage(page = 1) {
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function () {
+			if (this.readyState == 4 && this.status == 200) {
+				var j = JSON.parse(this.responseText);
+				for (var i = 0; i < j.length; i++) {
+					var post_xhttp = new XMLHttpRequest();
+					post_xhttp.onreadystatechange = function () {
+						if (this.readyState == 4 && this.status == 200) {
+							var post = JSON.parse(this.responseText);
+							var tr = document.createElement("div");
+							var name = document.createElement("div");
+							var href = "{{ url_for('post.by_shortlink', shortlink='') }}" + post.shortlink;
+							var name_a = document.createElement("a");
+							name_a.innerText = post.name;
+							name_a.href = href;
+							name.appendChild(name_a);
+							name.setAttribute("onclick", "window.location.href = '" + href + "';");
+							var created = document.createElement("div")
+							var localDate = moment(post.created).format("dddd, MMMM Do YYYY, H:mm");
+							created.innerText = localDate;
+							created.setAttribute("onclick", "window.location.href = '" + href + "';");
+							var categories = document.createElement("div");
+							var categories_list = post.categories.filter(Boolean);
+							for (var i = 0; i < categories_list.length; i++) {
+								var category = document.createElement("span");
+								var category_a = document.createElement("a");
+								category_a.innerText = categories_list[i];
+								category_a.href = "{{ url_for('post.category', category='') }}" + categories_list[i];
+								category.appendChild(category_a);
+								category.classList.add("text-gray-700", "hover:text-gray-500");
+								categories.appendChild(category);
+							}
+							if (categories.innerText == "")
+								categories.innerText = "uncategorized";
+							name.classList.add("py-2", "px-2", "font-bold", "text-gray-800", "cursor-pointer");
+							created.classList.add("py-2", "px-2", "text-gray-600", "text-sm", "cursor-pointer");
+							categories.classList.add("py-2", "px-2", "postcategories");
+							tr.appendChild(name);
+							tr.appendChild(created);
+							var content_xhttp = new XMLHttpRequest();
+							content_xhttp.onreadystatechange = function () {
+								if (this.readyState == 4 && this.status == 200) {
+									var content_j = JSON.parse(this.responseText);
+									var content_truncated = content_j.content.split(" ").slice(0, 16).join(" ");
+									if (content_j.content.length > content_truncated.length) {
+										content_truncated += "...";
+									}
+									var content = document.createElement("div");
+									var md = marked(content_truncated);
+									var clean_md = DOMPurify.sanitize(md);
+									content.innerHTML = clean_md;
+									content.classList.add("px-2", "py-2", "cursor-pointer");
+									content.setAttribute("onclick", "window.location.href = '" + href + "';");
+									tr.appendChild(content);
+									tr.appendChild(categories);
+									tr.classList.add("max-w-sm", "rounded", "border", "border-1px", "border-solid", "border-gray-300", "mr-auto", "ml-auto", "my-4", "shadow-lg", "py-4", "px-2", "postcard");
+//									document.getElementById("postsbody").appendChild(tr);
+								}
+							};
+							content_xhttp.open("GET", "{{ url_for('api.get_post_content', uuid='') }}" + post.uuid, false);
+							content_xhttp.send();
+//							tr.appendChild(categories);
+//							tr.classList.add("max-w-sm", "rounded", "border", "border-1px", "border-solid", "border-gray-300", "mr-auto", "ml-auto", "my-4", "shadow-lg", "py-4", "px-2", "postcard");
+							document.getElementById("postsbody").appendChild(tr);
+						}
+					};
+					post_xhttp.open("GET", "{{ url_for('api.get_post_info', uuid='') }}" + j[i].uuid, false);
+					post_xhttp.send();
+				}
+			}
+
+		};
+		xhttp.open("GET", "{{ url_for('api.posts_by_category', category=category) }}" + "/" + page, true);
+		xhttp.send();
+	}
+</script>
+<script>
+	var page = 0;
+	var pages = 1;
+	function clearTable() {
+		document.getElementById("postsbody").innerHTML = "";
+	}
+	function setActivePage(page = 1) {
+		if (pages <= 10) {
+			document.getElementById("pagination").innerHTML = "";
+			addFirstPrev();
+			for (var i = 1; i <= pages; i++) {
+				var a = document.createElement("a");
+				a.innerText = i;
+				a.setAttribute("onclick", "goToPage(" + i + ")");
+				if (i == page) {
+					a.classList.add("active");
+				}
+				document.getElementById("pagination").appendChild(a);
+			}
+			addNextLast();
+		}
+		else {
+			var p = document.getElementById("pagination");
+			p.innerHTML = "";
+			addFirstPrev();
+			var dots = document.createElement("div");
+			dots.innerText = "...";
+			if ((page - 3) > 1) {
+				p.appendChild(dots);
+			}
+			for (var i = Math.max(page - 3, 1); i <= Math.min(page + 3, pages); i++) {
+				var a = document.createElement("a");
+				a.innerText = i;
+				a.setAttribute("onclick", "goToPage(" + i + ")");
+				if (i == page) {
+					a.classList.add("active");
+				}
+				p.appendChild(a);
+			}
+			var dots = document.createElement("div");
+			dots.innerText = "...";
+			if ((page + 3) < pages) {
+				p.appendChild(dots);
+			}
+			addNextLast();
+		}
+	}
+	function goToPage(inPage = 1) {
+		page = inPage;
+		clearTable();
+		fetchPage(page);
+		setActivePage(page);
+	}
+	function goToPageDelta(delta = 0) {
+		console.log("delta");
+		page += delta;
+		if (page < 1)
+			page = 1;
+		if (page > pages)
+			page = pages;
+		goToPage(page);
+	}
+	function addFirstPrev() {
+		var p = document.getElementById("pagination");
+		var first = document.createElement("a");
+		first.innerText = "<<";
+		first.onclick = function() {
+			goToPage(1);
+		}
+		var prev = document.createElement("a");
+		prev.innerText = "<";
+		prev.onclick = function() {
+			goToPageDelta(-1);
+		}
+		p.appendChild(first);
+		p.appendChild(prev);
+	}
+	function addNextLast() {
+		var p = document.getElementById("pagination");
+		var next = document.createElement("a");
+		next.innerText = ">";
+		next.onclick = function() {
+			goToPageDelta(1);
+		}
+		var last = document.createElement("a");
+		last.innerText = ">>";
+		last.onclick = function() {
+			goToPage(pages);
+		}
+		p.appendChild(next);
+		p.appendChild(last);
+	}
+	function paginationInit() {
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				pages = Math.ceil(Number(this.responseText) / 20);
+				goToPage(1);
+				console.log("pi");
+			}
+		}
+		xhttp.open("GET", "{{ url_for('api.posts_count') }}", true);
+		xhttp.send();
+	}
+	function init() {
+		paginationInit();
+	}
+	document.addEventListener("load", init());
+</script>
+
+{% endblock %}
+{% block body %}
+<main>
+	<div id="postsbody" class="flex flex-wrap">
+	</div>
+	<div class="text-center">
+		<div class="pagination" id="pagination">
+		</div>
+	</div>
+
+</main>
+{% endblock %}
