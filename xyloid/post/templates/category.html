@@ -30,6 +30,8 @@
 							created.setAttribute("onclick", "window.location.href = '" + href + "';");
 							var categories = document.createElement("div");
 							var categories_list = post.categories.filter(Boolean);
+							if (categories_list.length == 0)
+								categories_list.push("uncategorized");
 							for (var i = 0; i < categories_list.length; i++) {
 								var category = document.createElement("span");
 								var category_a = document.createElement("a");
@@ -39,8 +41,6 @@
 								category.classList.add("text-gray-700", "hover:text-gray-500");
 								categories.appendChild(category);
 							}
-							if (categories.innerText == "")
-								categories.innerText = "uncategorized";
 							name.classList.add("py-2", "px-2", "font-bold", "text-gray-800", "cursor-pointer");
 							created.classList.add("py-2", "px-2", "text-gray-600", "text-sm", "cursor-pointer");
 							categories.classList.add("py-2", "px-2", "postcategories");

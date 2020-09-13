@@ -4,6 +4,7 @@ from ..db import db
 from .. import utils
 import datetime
 from uuid import uuid4
+from sqlalchemy import func, desc
 
 api = Blueprint("api", __name__)
 
@@ -118,4 +119,12 @@ def posts_by_category(category, page = 1):
 	else:
 		result = list(Posts.query.filter_by(category1="", category2="", category3="", category4="", category5="").paginate(page=page, per_page=20, max_per_page=20).items)
 	result = [{"uuid": r.uuid} for r in result]
+	return jsonify(result)
+
+@api.route("/categories")
+def get_categories():
+	result = Posts.query.with_entities(Posts.category1).union_all(Posts.query.with_entities(Posts.category2)).union_all(Posts.query.with_entities(Posts.category3)).union_all(Posts.query.with_entities(Posts.category4)).union_all(Posts.query.with_entities(Posts.category5)).filter(Posts.category1 != "").group_by(Posts.category1).with_entities(Posts.category1, func.count(Posts.category1)).order_by(desc(func.count(Posts.category1))).all()
+	uncategorized = Posts.query.filter((Posts.category1 == "") & (Posts.category2 == "") & (Posts.category3 == "") & (Posts.category4 == "") & (Posts.category5 == "")).count()
+	result += [("uncategorized", uncategorized)]
+	result = [{"name": r[0], "count": r[1]} for r in result]
 	return jsonify(result)
