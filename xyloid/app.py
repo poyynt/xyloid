@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, redirect, url_for
 from flask_minify import minify
 from werkzeug.middleware.proxy_fix import ProxyFix
 from .api.api import api
@@ -30,6 +30,10 @@ app.register_blueprint(api, url_prefix=f"{BASE_PATH}/api")
 app.register_blueprint(auth, url_prefix=f"{BASE_PATH}/auth")
 app.register_blueprint(admin, url_prefix=f"{BASE_PATH}/admin")
 app.register_blueprint(post, url_prefix=f"{BASE_PATH}/post")
+
+@app.route("/")
+def index():
+	return redirect(url_for('post.index'))
 
 #utility function
 def fix_werkzeug_logging():
