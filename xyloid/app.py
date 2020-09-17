@@ -31,7 +31,7 @@ app.register_blueprint(auth, url_prefix=f"{BASE_PATH}/auth")
 app.register_blueprint(admin, url_prefix=f"{BASE_PATH}/admin")
 app.register_blueprint(post, url_prefix=f"{BASE_PATH}/post")
 
-@app.route("/")
+@app.route(f"{BASE_PATH}/")
 def index():
 	return redirect(url_for('post.index'))
 
