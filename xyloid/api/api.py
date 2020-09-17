@@ -82,7 +82,7 @@ def delete_post(uuid):
 	if not session.get("logged_in"):
 		return jsonify({"error": "not logged in"}), 401
 	post = Posts.query.filter_by(uuid = uuid).first()
-	post_content = Posts.query.filter_by(post_id = post.internal_id).first()
+	post_content = PostContent.query.filter_by(post_id = post.internal_id).first()
 	db.session.delete(post_content)
 	db.session.delete(post)
 	db.session.commit()
@@ -125,6 +125,6 @@ def posts_by_category(category, page = 1):
 def get_categories():
 	result = Posts.query.with_entities(Posts.category1).union_all(Posts.query.with_entities(Posts.category2)).union_all(Posts.query.with_entities(Posts.category3)).union_all(Posts.query.with_entities(Posts.category4)).union_all(Posts.query.with_entities(Posts.category5)).filter(Posts.category1 != "").group_by(Posts.category1).with_entities(Posts.category1, func.count(Posts.category1)).order_by(desc(func.count(Posts.category1))).all()
 	uncategorized = Posts.query.filter((Posts.category1 == "") & (Posts.category2 == "") & (Posts.category3 == "") & (Posts.category4 == "") & (Posts.category5 == "")).count()
-	result += [("uncategorized", uncategorized)]
+	result += [("uncategorized", uncategorized), ("all", Posts.query.count())]
 	result = [{"name": r[0], "count": r[1]} for r in result]
 	return jsonify(result)
