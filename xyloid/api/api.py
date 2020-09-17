@@ -27,7 +27,7 @@ class PostContent(db.Model):
 @api.route("/posts/all")
 @api.route("/posts/all/<int:page>")
 def all_posts(page = 1):
-	result = list(Posts.query.paginate(page = page, per_page=20, max_per_page=20).items)
+	result = list(Posts.query.order_by(desc(Posts.internal_id)).paginate(page = page, per_page=20, max_per_page=20).items)
 	result = [{"name": r.name, "uuid": r.uuid, "shortlink": r.shortlink, "created": r.created, "categories": [r.category1, r.category2, r.category3, r.category4, r.category5]} for r in result]
 	return jsonify(result)
 
@@ -115,9 +115,9 @@ def edit_post(uuid):
 def posts_by_category(category, page = 1):
 	category = category.lower()
 	if category not in ("uncategorized"):
-		result = list(Posts.query.filter((Posts.category1 == category) | (Posts.category2 == category) | (Posts.category3 == category) | (Posts.category4 == category) | (Posts.category5 == category)).paginate(page=page, per_page=20, max_per_page=20).items)
+		result = list(Posts.query.filter((Posts.category1 == category) | (Posts.category2 == category) | (Posts.category3 == category) | (Posts.category4 == category) | (Posts.category5 == category)).order_by(desc(Posts.internal_id)).paginate(page=page, per_page=20, max_per_page=20).items)
 	else:
-		result = list(Posts.query.filter_by(category1="", category2="", category3="", category4="", category5="").paginate(page=page, per_page=20, max_per_page=20).items)
+		result = list(Posts.query.filter_by(category1="", category2="", category3="", category4="", category5="").order_by(desc(Posts.internal_id)).paginate(page=page, per_page=20, max_per_page=20).items)
 	result = [{"uuid": r.uuid} for r in result]
 	return jsonify(result)
 
