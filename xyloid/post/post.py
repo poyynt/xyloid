@@ -3,6 +3,10 @@ from ..config import config
 
 post = Blueprint("post", __name__, static_folder="static", template_folder="templates")
 
+@post.route("/")
+def index():
+	return render_template("post_index.html", blog=config["blog_name"])
+
 @post.route("/<shortlink>")
 def by_shortlink(shortlink):
 	return render_template("post.html", shortlink = shortlink, uuid = None, blog=config["blog_name"])

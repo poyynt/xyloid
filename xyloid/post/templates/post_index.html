@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% block title %}Homepage{% endblock %}
+{% block head %}
+<script src="{{ url_for('static', filename='moment.min.js') }}"></script>
+<script src="{{ url_for('static', filename='moment-timezone-with-data.min.js') }}"></script>
+<script src="{{ url_for('static', filename='marked.min.js') }}"></script>
+<script src="{{ url_for('static', filename='purify.min.js') }}"></script>
+<script>
+	function fetchCategories() {
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				var j = JSON.parse(this.responseText);
+				for (var i = 0; i < j.length; i++) {
+					var div = document.createElement("div");
+					div.classList.add("bg-blue-200", "p-2", "rounded-full", "inline-block", "m-1");
+					var a = document.createElement("a");
+					a.classList.add("hover:text-gray-700");
+					a.href = "{{ url_for('post.category', category='') }}" + j[i].name;
+					a.innerText = j[i].name;
+					div.appendChild(a);
+					var span = document.createElement("span");
+					span.classList.add("m-2", "text-gray-600");
+					span.innerText = j[i].count;
+					div.appendChild(span);
+					document.getElementById("categories").appendChild(div);
+				}
+			}
+		};
+		xhttp.open("GET", "{{ url_for('api.get_categories') }}", true);
+		xhttp.send();
+	}
+	function fetchPage(page = 1) {
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function () {
+			if (this.readyState == 4 && this.status == 200) {
+				var j = JSON.parse(this.responseText);
+				for (var i = 0; i < j.length; i++) {
+					var post_xhttp = new XMLHttpRequest();
+					post_xhttp.onreadystatechange = function () {
+						if (this.readyState == 4 && this.status == 200) {
+							var post = JSON.parse(this.responseText);
+							var tr = document.createElement("div");
+							var name = document.createElement("div");
+							var href = "{{ url_for('post.by_shortlink', shortlink='') }}" + post.shortlink;
+							var name_a = document.createElement("a");
+							name_a.innerText = post.name;
+							name_a.href = href;
+							name.appendChild(name_a);
+							name.setAttribute("onclick", "window.location.href = '" + href + "';");
+							var created = document.createElement("div")
+							var localDate = moment(post.created).format("dddd, MMMM Do YYYY, H:mm");
+							created.innerText = localDate;
+							var categories = document.createElement("div");
+							var categories_list = post.categories.filter(Boolean);
+							if (categories_list.length == 0)
+								categories_list.push("uncategorized");
+							for (var i = 0; i < categories_list.length; i++) {
+								var category = document.createElement("span");
+								var category_a = document.createElement("a");
+								category_a.innerText = categories_list[i];
+								category_a.href = "{{ url_for('post.category', category='') }}" + categories_list[i];
+								category.appendChild(category_a);
+								category.classList.add("text-gray-700", "hover:text-gray-500");
+								categories.appendChild(category);
+							}
+							name.classList.add("text-2xl", "m-2");
+							created.classList.add("m-2", "text-gray-600");
+							categories.classList.add("m-2", "postcategories");
+							tr.appendChild(name);
+							tr.appendChild(created);
+							var content_xhttp = new XMLHttpRequest();
+							content_xhttp.onreadystatechange = function () {
+								if (this.readyState == 4 && this.status == 200) {
+									var content_j = JSON.parse(this.responseText);
+									var content_truncated = content_j.content.split(" ").slice(0, 16).join(" ");
+									if (content_j.content.length > content_truncated.length) {
+										content_truncated += "...";
+									}
+									var content = document.createElement("div");
+									var md = marked(content_truncated);
+									var clean_md = DOMPurify.sanitize(md);
+									content.innerHTML = clean_md;
+									content.classList.add("m-2", "py-2");
+									tr.appendChild(content);
+									tr.appendChild(categories);
+									tr.classList.add("border-gray-500", "rounded-lg", "border-solid", "border", "p-4", "shadow-lg", "m-4");
+								}
+							};
+							content_xhttp.open("GET", "{{ url_for('api.get_post_content', uuid='') }}" + post.uuid, false);
+							content_xhttp.send();
+							document.getElementById("recent").appendChild(tr);
+						}
+					};
+					post_xhttp.open("GET", "{{ url_for('api.get_post_info', uuid='') }}" + j[i].uuid, false);
+					post_xhttp.send();
+				}
+				addLoadMoreIfNeeded();
+			}
+
+		};
+		xhttp.open("GET", "{{ url_for('api.all_posts') }}" + "/" + page, true);
+		xhttp.send();
+	}
+</script>
+<script>
+	var pages = 0;
+	var page = 0;
+	function addLoadMoreIfNeeded() {
+		if (page < pages) {
+			var loadmore = document.createElement("div");
+			loadmore.id = "loadmore";
+			loadmore.classList.add("border-gray-500", "rounded-lg", "border-solid", "border", "p-4", "shadow-lg", "m-4", "hover:bg-gray-500", "cursor-pointer", "text-center");
+			loadmore.setAttribute("onclick", "loadNext()");
+			loadmore.innerText = "Load more";
+			document.getElementById("recent").appendChild(loadmore);
+		}
+	}
+	function loadNext() {
+		page += 1;
+		document.getElementById("recent").removeChild(document.getElementById("loadmore"));
+		fetchPage(page);
+	}
+	function paginationInit() {
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				pages = Math.ceil(Number(this.responseText) / 20);
+				loadNext();
+				console.log("pi");
+			}
+		}
+		xhttp.open("GET", "{{ url_for('api.posts_count') }}", true);
+		xhttp.send();
+	}
+</script>
+<script>
+	function init() {
+		fetchCategories();
+		paginationInit();
+	}
+	document.addEventListener("load", init());
+</script>
+{% endblock %}
+{% block body %}
+<div class="flex">
+	<main class="w-3/4 px-4 py-2" id="recent">
+		<div id="loadmore"></div>
+	</main>
+	<aside class="w-1/4 px-4 py-2">
+		<div id="categories">
+			<p class="my-4 text-2xl">Categories</p>
+		</div>
+	</aside>
+</div>
+{% endblock %}
