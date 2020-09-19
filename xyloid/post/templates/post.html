@@ -12,6 +12,7 @@
 		if (this.readyState == 4 && this.status == 200) {
 			var j = JSON.parse(this.responseText);
 			document.getElementById("postname").innerText = j.name;
+			document.getElementById("postname").dir = "auto";
 			document.title = j.name + " " + document.title;
 			var localDate = moment(j.created).format("[Written at] dddd, MMMM Do YYYY, H:mm");
 			document.getElementById("postdate").innerText = localDate;
@@ -37,6 +38,7 @@
 					var md = marked(content_j.content);
 					var clean_md = DOMPurify.sanitize(md);
 					document.getElementById("postcontent").innerHTML = clean_md;
+					document.getElementById("postcontent").dir = "auto";
 					Prism.highlightAll();
 				}
 			};

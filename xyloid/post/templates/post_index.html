@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block title %}Homepage{% endblock %}
 {% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='prism.css') }}">
+<script src="{{ url_for('static', filename='prism.js') }}"></script>
 <script src="{{ url_for('static', filename='moment.min.js') }}"></script>
 <script src="{{ url_for('static', filename='moment-timezone-with-data.min.js') }}"></script>
 <script src="{{ url_for('static', filename='marked.min.js') }}"></script>
@@ -85,11 +87,13 @@
 									tr.appendChild(content);
 									tr.appendChild(categories);
 									tr.classList.add("border-gray-500", "rounded-lg", "border-solid", "border", "p-4", "shadow-lg", "m-4");
+									tr.dir = "auto";
 								}
 							};
-							content_xhttp.open("GET", "{{ url_for('api.get_post_content', uuid='') }}" + post.uuid, false);
+							content_xhttp.open("GET", "{{ url_for('api.get_post_content', uuid='') }}" + post.uuid, true);
 							content_xhttp.send();
 							document.getElementById("recent").appendChild(tr);
+							Prism.highlightAll()
 						}
 					};
 					post_xhttp.open("GET", "{{ url_for('api.get_post_info', uuid='') }}" + j[i].uuid, false);
