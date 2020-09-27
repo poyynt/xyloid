@@ -34,6 +34,13 @@ Main database:
 |    |--- user_id			INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL
 |    |--- username			VARCHAR(32) UNIQUE NOT NULL
 |    |--- password_hash			VARCHAR(128) NOT NULL
+|--- comments 
+|    |--- comment_id			INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL
+|    |--- on_post			INTEGER REFERENCES posts(internal_id) NOT NULL
+|    |--- date				DATE NOT NULL
+|    |--- name				VARCHAR(256) NOT NULL
+|    |--- comment			VARCHAR(2048) NOT NULL
+|    |--- show				BOOLEAN NOT NULL DEFAULT true
 ```
 
 A SQL Schema file is provided for creating the database.
