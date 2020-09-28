@@ -188,6 +188,8 @@
         var num = Number(window.location.hash.slice(5));
         if (isNaN(num))
             num = 1;
+		if (num > pages)
+			num = pages;
         return num;
     }
 	function paginationInit() {
