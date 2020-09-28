@@ -179,12 +179,21 @@
 		p.appendChild(next);
 		p.appendChild(last);
 	}
+	function getPageFromURLHash() {
+        if (window.location.hash.slice(0, 5) != "#page")
+            return 1;
+        var num = Number(window.location.hash.slice(5));
+        if (isNaN(num))
+            num = 1;
+        return num;
+    }
 	function paginationInit() {
 		var xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				pages = Math.ceil(Number(this.responseText) / 10);
-				goToPage(1);
+				//goToPage(1);
+				goToPage(getPageFromURLHash());
 				console.log("pi");
 			}
 		}
@@ -195,6 +204,7 @@
 		paginationInit();
 	}
 	document.addEventListener("load", init());
+	window.addEventListener("hashchange", paginationInit);
 </script>
 
 {% endblock %}
