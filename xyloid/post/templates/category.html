@@ -139,6 +139,9 @@
 		clearTable();
 		fetchPage(page);
 		setActivePage(page);
+		window.removeEventListener("hashchange", paginationInit);
+		window.location.hash = "#page" + page;
+		window.addEventListener("hashchange", paginationInit);
 	}
 	function goToPageDelta(delta = 0) {
 		console.log("delta");
