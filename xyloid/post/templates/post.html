@@ -36,8 +36,7 @@
 				if (this.readyState == 4 && this.status == 200) {
 					var content_j = JSON.parse(this.responseText);
 					var md = marked(content_j.content);
-					var clean_md = DOMPurify.sanitize(md);
-					document.getElementById("postcontent").innerHTML = clean_md;
+					document.getElementById("postcontent").innerHTML = md;
 					document.getElementById("postcontent").dir = "auto";
 					Prism.highlightAll();
 				}
@@ -61,7 +60,6 @@
 	}
 </script>
 <script src="{{ url_for('static', filename='marked.min.js') }}"></script>
-<script src="{{ url_for('static', filename='purify.min.js') }}"></script>
 {% endblock %}
 {% block body %}
 <script>
