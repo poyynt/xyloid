@@ -1,7 +1,6 @@
 Flask
 SQLAlchemy
 Flask-SQLAlchemy
-Flask-Minify
 passlib
 argon2-cffi
 

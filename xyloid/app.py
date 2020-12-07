@@ -1,5 +1,5 @@
 from flask import Flask, redirect, url_for
-from flask_minify import minify
+#  from flask_minify import minify
 from werkzeug.middleware.proxy_fix import ProxyFix
 from .api.api import api
 from .auth.auth import auth
@@ -21,8 +21,8 @@ app.config["JSONIFY_PRETTYPRINT_REGULAR"] = True
 app.config["SECRET_KEY"] = open("xyloid/secret_key", "rb").read()
 app.wsgi_app = ProxyFix(app.wsgi_app)
 
-if config["minify"]:
-	minify(app=app, html=False, js=False, cssless=True, static=True)
+#  if config["minify"]:
+	#  minify(app=app, html=False, js=False, cssless=True, static=True)
 
 db.init_app(app)
 
