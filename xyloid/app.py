@@ -37,19 +37,19 @@ def index():
 
 #utility function
 def fix_werkzeug_logging():
-    from werkzeug.serving import WSGIRequestHandler
+	from werkzeug.serving import WSGIRequestHandler
 
-    def address_string(self):
-        forwarded_for = self.headers.get(
-            'X-Forwarded-For', '').split(',')
+	def address_string(self):
+		forwarded_for = self.headers.get(
+			'X-Forwarded-For', '').split(',')
 
-        if forwarded_for and forwarded_for[0]:
-            return forwarded_for[0]
+		if forwarded_for and forwarded_for[0]:
+			return forwarded_for[0]
 		return self.client_address[0]
 
-    WSGIRequestHandler.address_string = address_string
+	WSGIRequestHandler.address_string = address_string
 
 fix_werkzeug_logging()
 
 if __name__ == "__main__":
-    app.run(host = RUN_HOST, port = RUN_PORT)
+	app.run(host = RUN_HOST, port = RUN_PORT)
