@@ -1,30 +1,42 @@
 {% extends "base.html" %}
 {% block title %}Login{% endblock %}
+{% block head %}
+<script type="module">
+	import { body, main, section, form, div, label, input, button } from '{{ url_for("static", filename="skruv/html.js") }}'
+	import { renderNode } from '{{ url_for("static", filename="skruv/vDOM.js") }}'
+
+	renderNode(
+		main({}, 
+			{% with messages = get_flashed_messages() %}
+				{% if messages %}
+					section({class: 'messages'}, 
+						{% for message in messages %}
+							div({class: 'message'}, '{{ message }}'),
+						{% endfor %}
+					),
+				{% endif %}
+			{% endwith %}
+			section({class: 'mainsection w-full flex flex-wrap my-8'}, 
+				form({method: 'post', action: '{{ url_for('.login_verify') }}', class: 'mr-auto ml-auto'}, 
+					div({id: "username_div"}, 
+						label({for: "username", id: "username_label", class: "text-gray-700 text-lg"}, 'Username'),
+						input({name: "username", id: "username_input", type: "text", class: "form-input block w-full text-lg my-2"})
+					),
+                    div({id: "password_div"}, 
+                        label({for: "password", id: "password_label", class: "text-gray-700 text-lg"}, 'Password'),
+                        input({name: "password", id: "password_input", type: "password", class: "form-input block w-full text-lg my-2"})
+                    ),
+					div({id: "submit_div"},
+						button({type: "submit", id: "submit_input", class: "py-2 px-4 rounded hover:bg-gray-700 hover:text-white border border-gray-500 my-2 block w-full"}, "Login")
+					)
+				)
+			)
+		),
+		document.getElementById("main")
+	);
+</script>
+{% endblock %}
 {% block body %}
-<main>
-	{% with messages = get_flashed_messages() %}
-		{% if messages %}
-			<section class="messages">
-				{% for message in messages %}
-					<div class="message">{{ message }}</div>
-				{% endfor %}
-			</section>
-		{% endif %}
-	{% endwith %}
-	<section class="mainsection w-full flex flex-wrap my-8">
-		<form method="post" action="{{ url_for('.login_verify') }}" class="mr-auto ml-auto">
-			<div id="username_div">
-				<label for="username" id="username_label" class="text-gray-700 text-lg">Username</label>
-				<input name="username" type="text" id="username_input" class="form-input block w-full text-lg my-2">
-			</div>
-			<div id="password_div">
-				<label for="password" id="password_label" class="text-gray-700 text-lg">Password</label>
-				<input name="password" type="password" id="password_input" class="form-input block w-full text-lg my-2">
-			</div>
-			<div id="submit_div">
-				<button type="submit" id="submit_input" class="py-2 px-4 rounded hover:bg-gray-700 hover:text-white border border-gray-500 my-2 block w-full">Login</button>
-			</div>
-		</form>
-	</section>
+<main id="main">
 </main>
 {% endblock %}
