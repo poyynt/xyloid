@@ -1,0 +1,3 @@
+[submodule "xyloid/static/skruv"]
+	path = xyloid/static/skruv
+	url = https://github.com/skruv/skruv
