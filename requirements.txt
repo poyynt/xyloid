@@ -3,4 +3,4 @@ SQLAlchemy
 Flask-SQLAlchemy
 passlib
 argon2-cffi
-
+gunicorn
