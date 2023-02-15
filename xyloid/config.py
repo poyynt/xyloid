@@ -1,4 +1,6 @@
+import os
+
 config = {
-		"blog_name": "Parsa Torbati's blog",
-		"minify": True,
-		}
+	"blog_name": os.environ.get("XYLOID_BLOG_NAME", default="Blog"),
+	"minify": True,
+}
