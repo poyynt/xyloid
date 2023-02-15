@@ -1,6 +1,7 @@
 from flask import Flask, redirect, url_for
 #  from flask_minify import minify
 from werkzeug.middleware.proxy_fix import ProxyFix
+import logging
 import os
 from secrets import token_bytes
 from .api.api import api
@@ -61,8 +62,12 @@ fix_werkzeug_logging()
 with app.test_request_context() as ctx:
 	db.create_all()
 
+if __name__ != '__main__':
+    gunicorn_logger = logging.getLogger('gunicorn.error')
+    app.logger.handlers = gunicorn_logger.handlers
+    app.logger.setLevel(gunicorn_logger.level)
+
 if os.environ.get("XYLOID_LOG_FILE", default=None) is not None:
-	import logging
 	logging.basicConfig(filename=os.environ.get("XYLOID_LOG_FILE"), level=logging.INFO)
 
 if __name__ == "__main__":
