@@ -1,7 +1,10 @@
-FROM python:3.9.2-alpine
+FROM python:alpine
 
 # upgrade pip
 RUN pip install --upgrade pip
+
+# install py3-argon2-cffi
+RUN apk add py3-argon2-cffi
 
 # get curl for healthchecks
 RUN apk add curl
