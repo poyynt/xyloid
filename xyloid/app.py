@@ -8,7 +8,7 @@ from .api.api import api
 from .auth.auth import auth
 from .admin.admin import admin
 from .post.post import post
-from .db import db
+from .db import db, migrate
 from .config import config
 
 BASE_PATH = os.environ.get("XYLOID_BASE_PATH", default="/xyloid")
@@ -33,6 +33,7 @@ app.wsgi_app = ProxyFix(app.wsgi_app)
 	#  minify(app=app, html=False, js=False, cssless=True, static=True)
 
 db.init_app(app)
+migrate.init_app(app, db)
 
 app.register_blueprint(api, url_prefix=f"{BASE_PATH}/api")
 app.register_blueprint(auth, url_prefix=f"{BASE_PATH}/auth")
