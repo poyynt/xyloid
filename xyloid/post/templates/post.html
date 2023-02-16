@@ -15,7 +15,8 @@
 			document.getElementById("postname").dir = "auto";
 			document.title = j.name + " " + document.title;
 			var localDate = moment(j.created).format("[Written at] dddd, MMMM Do YYYY, H:mm");
-			document.getElementById("postdate").innerText = localDate;
+			var postAuthor = j.author;
+			document.getElementById("postmetadata").innerText = localDate + " by " + postAuthor;
 			document.getElementById("postshortlink").href = "{{ url_for('post.by_shortlink', shortlink='') }}" + j.shortlink;
 			var categories = j.categories.filter(Boolean);
 			if (categories.length == 0) {
@@ -68,7 +69,7 @@ document.addEventListener("load", init());
 <main class="px-64 py-8 sm:pd-4 md:pd-4">
 	<div style="display: none;" id="error" class="message"></div>
 	<h2 id="postname" class="my-8 text-4xl"></h2>
-	<div id="postdate" class="text-gray-500"></div>
+	<div id="postmetadata" class="text-gray-500"></div>
 	<div class="hr"></div>
 	<div id="postcontent" class="prose my-16 text-justify" style="max-width: 100%;"></div>
 	<div id="postcategories" class="my-4 text-gray-700">

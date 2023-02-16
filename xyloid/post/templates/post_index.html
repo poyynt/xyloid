@@ -50,9 +50,9 @@
 							name_a.href = href;
 							name.appendChild(name_a);
 							name.setAttribute("onclick", "window.location.href = '" + href + "';");
-							var created = document.createElement("div")
+							var metadata = document.createElement("div")
 							var localDate = moment(post.created).format("dddd, MMMM Do YYYY, H:mm");
-							created.innerText = localDate;
+							metadata.innerText = localDate + " by " + post.author;
 							var categories = document.createElement("div");
 							var categories_list = post.categories.filter(Boolean);
 							if (categories_list.length == 0)
@@ -67,10 +67,10 @@
 								categories.appendChild(category);
 							}
 							name.classList.add("text-2xl", "m-2");
-							created.classList.add("m-2", "text-gray-600");
+							metadata.classList.add("m-2", "text-gray-600");
 							categories.classList.add("m-2", "postcategories");
 							tr.appendChild(name);
-							tr.appendChild(created);
+							tr.appendChild(metadata);
 							var content_xhttp = new XMLHttpRequest();
 							content_xhttp.onreadystatechange = function () {
 								if (this.readyState == 4 && this.status == 200) {

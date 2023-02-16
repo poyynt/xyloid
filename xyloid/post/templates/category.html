@@ -26,10 +26,10 @@
 							name_a.href = href;
 							name.appendChild(name_a);
 							name.setAttribute("onclick", "window.location.href = '" + href + "';");
-							var created = document.createElement("div")
+							var metadata = document.createElement("div")
 							var localDate = moment(post.created).format("dddd, MMMM Do YYYY, H:mm");
-							created.innerText = localDate;
-							created.setAttribute("onclick", "window.location.href = '" + href + "';");
+							metadata.innerText = localDate + " by " + post.author;
+							metadata.setAttribute("onclick", "window.location.href = '" + href + "';");
 							var categories = document.createElement("div");
 							var categories_list = post.categories.filter(Boolean);
 							if (categories_list.length == 0)
@@ -44,10 +44,10 @@
 								categories.appendChild(category);
 							}
 							name.classList.add("py-2", "px-2", "font-bold", "text-gray-800", "cursor-pointer");
-							created.classList.add("py-2", "px-2", "text-gray-600", "text-sm", "cursor-pointer");
+							metadata.classList.add("py-2", "px-2", "text-gray-600", "text-sm", "cursor-pointer");
 							categories.classList.add("py-2", "px-2", "postcategories");
 							tr.appendChild(name);
-							tr.appendChild(created);
+							tr.appendChild(metadata);
 							var content_xhttp = new XMLHttpRequest();
 							content_xhttp.onreadystatechange = function () {
 								if (this.readyState == 4 && this.status == 200) {
@@ -212,6 +212,11 @@
 	window.addEventListener("hashchange", paginationInit);
 </script>
 
+<script type="module">
+	import { body, main, section, form, div, label, input, button } from '{{ url_for("static", filename="skruv/html.js") }}'
+	import { renderNode } from '{{ url_for("static", filename="skruv/vDOM.js") }}'
+
+</script>
 {% endblock %}
 {% block body %}
 <main>
