@@ -15,6 +15,7 @@ class Posts(db.Model):
 	shortlink = db.Column(db.String(16), unique=True)
 	uuid = db.Column(db.String(36), unique=True, nullable=False)
 	created = db.Column(db.DateTime, nullable=False)
+	author = db.Column(db.String(32), nullable=False)
 	category1 = db.Column(db.String(32))
 	category2 = db.Column(db.String(32))
 	category3 = db.Column(db.String(32))
@@ -38,6 +39,7 @@ def all_posts(page=1):
 			"uuid": r.uuid,
 			"shortlink": r.shortlink,
 			"created": r.created,
+			"author": r.author,
 			"categories": [
 				r.category1, r.category2,
 				r.category3, r.category4, r.category5]
@@ -60,6 +62,7 @@ def get_post_info(uuid):
 		"shortlink": result.shortlink,
 		"uuid": result.uuid,
 		"created": result.created,
+		"author": result.author,
 		"categories": [
 			result.category1, result.category2,
 			result.category3, result.category4, result.category5]
@@ -76,6 +79,7 @@ def get_post_info_by_shortlink(shortlink):
 		"shortlink": result.shortlink,
 		"uuid": result.uuid,
 		"created": result.created,
+		"author": result.author,
 		"categories": [
 			result.category1, result.category2,
 			result.category3, result.category4, result.category5]
@@ -108,6 +112,7 @@ def create_post():
 		shortlink=shortlink,
 		uuid=uuid,
 		created=datetime.datetime.now(datetime.timezone.utc),
+		author=session.get("username")
 		category1=categories[0], category2=categories[1],
 		category3=categories[2], category4=categories[3], category5=categories[4])
 	db.session.add(info)
