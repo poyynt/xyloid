@@ -112,7 +112,7 @@ def create_post():
 		shortlink=shortlink,
 		uuid=uuid,
 		created=datetime.datetime.now(datetime.timezone.utc),
-		author=session.get("username")
+		author=session.get("username"),
 		category1=categories[0], category2=categories[1],
 		category3=categories[2], category4=categories[3], category5=categories[4])
 	db.session.add(info)
