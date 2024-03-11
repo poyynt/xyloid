@@ -3,30 +3,34 @@ from ..db import db
 
 admin = Blueprint("admin", __name__, static_folder="static", template_folder="templates")
 
+
 @admin.route("/")
 def index():
-	if not session.get("logged_in"):
-		flash("Not logged in")
-		return redirect(url_for("auth.login_page"))
-	return redirect(url_for(".posts"))
+    if not session.get("logged_in"):
+        flash("Not logged in")
+        return redirect(url_for("auth.login_page"))
+    return redirect(url_for(".posts"))
+
 
 @admin.route("/new")
 def new():
-	if not session.get("logged_in"):
-		flash("Not logged in")
-		return redirect(url_for("auth.login_page"))
-	return render_template("new.html")
+    if not session.get("logged_in"):
+        flash("Not logged in")
+        return redirect(url_for("auth.login_page"))
+    return render_template("new.html")
+
 
 @admin.route("/posts")
 def posts():
-	if not session.get("logged_in"):
-		flash("Not logged in")
-		return redirect(url_for("auth.login_page"))
-	return render_template("posts.html")
+    if not session.get("logged_in"):
+        flash("Not logged in")
+        return redirect(url_for("auth.login_page"))
+    return render_template("posts.html")
+
 
 @admin.route("/edit/<uuid>")
 def edit(uuid):
-	if not session.get("logged_in"):
-		flash("Not logged in")
-		return redirect(url_for("auth.login_page"))
-	return render_template("edit.html", uuid = uuid)
+    if not session.get("logged_in"):
+        flash("Not logged in")
+        return redirect(url_for("auth.login_page"))
+    return render_template("edit.html", uuid=uuid)
