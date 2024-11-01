@@ -5,4 +5,4 @@ Flask-Migrate
 passlib~=1.7.4
 argon2-cffi
 gunicorn
-werkzeug~=3.0.1
+werkzeug~=3.0.6
